@@ -56,7 +56,18 @@ class SqliteMagic(Magics):
         for i, r in enumerate(row):
             if r is None:
                 row[i] = "NULL"
-        return '<tr>' + ''.join('<td>' + str(r) + '</td>' for r in row) + '</tr>'
+
+        retval = "<tr>{0}</tr>"
+        tds = ""
+        for r in row:
+            el = ''
+            if isinstance(r, unicode):
+                el = repr(r) #.decode("latin-1")
+            else:
+                el = str(r)
+            tds += '<td>' + el + '</td>'
+
+        return retval.format(tds)
 
     def rowify_header(self, row):
         return '<tr>' + ''.join('<th>' + str(r) + '</th>' for r in row) + '</tr>'
